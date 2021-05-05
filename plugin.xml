@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-simple-psn" version="1.0.0">
+    <name>SimplePSN</name>
+    <description>Simple PSN</description>
+    <license>MIT</license>
+    <keywords>cordova,psn</keywords>
+    <js-module src="www/SimplePSN.js" name="SimplePSN">
+        <clobbers target="SimplePSN" />
+    </js-module>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="SimplePSN">
+                <param name="ios-package" value="SimplePSN"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/SimplePSN.h" />
+        <header-file src="src/ios/AppDelegate+simplepsn.h" />
+        <source-file src="src/ios/SimplePSN.m" />
+        <source-file src="src/ios/AppDelegate+simplepsn.m" />
+    </platform>
+</plugin>
