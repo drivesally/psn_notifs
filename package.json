@@ -1,7 +1,7 @@
 {
   "name": "cordova-simple-psn",
   "version": "1.0.0",
-  "description": "\n    This plugin allows your application to receive push notifications on Android, iOS",
+  "description": "Simple PSN",
   "cordova": {
     "id": "cordova-simple-psn",
     "platforms": [
@@ -13,24 +13,15 @@
     "url": "git+https://github.com/drivesally/psn_notifs.git"
   },
   "keywords": [
+    "cordova",
+    "psn",
     "ecosystem:cordova",
-    "cordova-android",
-    "cordova-amazon-fireos",
-    "cordova-ios",
-    "cordova-blackberry10",
-    "cordova-wp8",
-    "cordova-windows8"
-  ],
-  "engines": [
-    {
-      "name": "cordova",
-      "version": ">=4.0.0"
-    }
+    "cordova-ios"
   ],
   "author": "Drive Sally",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/drivesally/psn_notifs/issues"
   },
-  "homepage": "https://github.com/drivesally/psn_notifs"
+  "homepage": "https://github.com/drivesally/psn_notifs#readme"
 }
