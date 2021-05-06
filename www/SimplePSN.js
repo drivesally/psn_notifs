@@ -1,18 +1,18 @@
-var PushNotification = function() {
+var SimplePSN = function() {
 };
 
 
 // Call this to register for push notifications. Content of [options] depends on whether we are working with APNS (iOS) or GCM (Android)
-PushNotification.prototype.register = function(successCallback, errorCallback, options) {
+SimplePSN.prototype.register = function(successCallback, errorCallback, options) {
     if (errorCallback == null) { errorCallback = function() {}}
 
     if (typeof errorCallback != "function")  {
-        console.log("PushNotification.register failure: failure parameter not a function");
+        console.log("SimplePSN.register failure: failure parameter not a function");
         return
     }
 
     if (typeof successCallback != "function") {
-        console.log("PushNotification.register failure: success callback parameter must be a function");
+        console.log("SimplePSN.register failure: success callback parameter must be a function");
         return
     }
 
@@ -20,16 +20,16 @@ PushNotification.prototype.register = function(successCallback, errorCallback, o
 };
 
 // Call this to unregister for push notifications
-PushNotification.prototype.unregister = function(successCallback, errorCallback, options) {
+SimplePSN.prototype.unregister = function(successCallback, errorCallback, options) {
     if (errorCallback == null) { errorCallback = function() {}}
 
     if (typeof errorCallback != "function")  {
-        console.log("PushNotification.unregister failure: failure parameter not a function");
+        console.log("SimplePSN.unregister failure: failure parameter not a function");
         return
     }
 
     if (typeof successCallback != "function") {
-        console.log("PushNotification.unregister failure: success callback parameter must be a function");
+        console.log("SimplePSN.unregister failure: success callback parameter must be a function");
         return
     }
 
@@ -37,16 +37,16 @@ PushNotification.prototype.unregister = function(successCallback, errorCallback,
 };
 
 // Call this to set the application icon badge
-PushNotification.prototype.setApplicationIconBadgeNumber = function(successCallback, errorCallback, badge) {
+SimplePSN.prototype.setApplicationIconBadgeNumber = function(successCallback, errorCallback, badge) {
     if (errorCallback == null) { errorCallback = function() {}}
 
     if (typeof errorCallback != "function")  {
-        console.log("PushNotification.setApplicationIconBadgeNumber failure: failure parameter not a function");
+        console.log("SimplePSN.setApplicationIconBadgeNumber failure: failure parameter not a function");
         return
     }
 
     if (typeof successCallback != "function") {
-        console.log("PushNotification.setApplicationIconBadgeNumber failure: success callback parameter must be a function");
+        console.log("SimplePSN.setApplicationIconBadgeNumber failure: success callback parameter must be a function");
         return
     }
 
@@ -58,12 +58,12 @@ PushNotification.prototype.setApplicationIconBadgeNumber = function(successCallb
 if(!window.plugins) {
     window.plugins = {};
 }
-if (!window.plugins.pushNotification) {
-    window.plugins.pushNotification = new PushNotification();
+if (!window.plugins.SimplePSN) {
+    window.plugins.SimplePSN = new SimplePSN();
 }
 
 if (typeof module != 'undefined' && module.exports) {
-  module.exports = PushNotification;
+  module.exports = SimplePSN;
 }
 
 
