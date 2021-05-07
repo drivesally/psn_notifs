@@ -361,7 +361,8 @@
       [self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsCallBack waitUntilDone:NO];
     } else {
       // Cordova-iOS 4+
-      [self.webView performSelectorOnMainThread:@selector(evaluateJavaScript:completionHandler:) withObject:jsCallBack waitUntilDone:NO];
+//      [self.webView performSelectorOnMainThread:@selector(evaluateJavaScript:completionHandler:) withObject:jsCallBack waitUntilDone:NO];
+        [self.commandDelegate evalJs:jsCallBack];
     }
 
     self.notificationMessage = nil;

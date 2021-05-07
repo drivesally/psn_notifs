@@ -89,7 +89,44 @@ static char launchNotificationKey;
 }
 
 -(void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
-    NSLog(@"GOT NOTIFICATION %@",userInfo);
+    NSLog(@"didReceiveRemoteNotification with fetchCompletionHandler");
+
+   if (application.applicationState == UIApplicationStateActive) {
+       SimplePSN *pushHandler = [self getCommandInstance:@"SimplePSN"];
+       pushHandler.notificationMessage = userInfo;
+       pushHandler.isInline = YES;
+       [pushHandler notificationReceived];
+       completionHandler(UIBackgroundFetchResultNewData);
+   }
+   else {
+       long silent = 0;
+       id aps = [userInfo objectForKey:@"aps"];
+       id contentAvailable = [aps objectForKey:@"content-available"];
+       if ([contentAvailable isKindOfClass:[NSString class]] && [contentAvailable isEqualToString:@"1"]) {
+           silent = 1;
+       } else if ([contentAvailable isKindOfClass:[NSNumber class]]) {
+           silent = [contentAvailable integerValue];
+       }
+       
+       if (silent == 1) {
+           void (^safeHandler)(UIBackgroundFetchResult) = ^(UIBackgroundFetchResult result){
+           dispatch_async(dispatch_get_main_queue(), ^{
+               completionHandler(result);
+               });
+           };
+
+           NSMutableDictionary *mutableNotification = [userInfo mutableCopy];
+           NSMutableDictionary* params = [NSMutableDictionary dictionaryWithCapacity:2];
+           [params setObject:safeHandler forKey:@"silentNotificationHandler"];
+           SimplePSN *pushHandler = [self getCommandInstance:@"SimplePSN"];
+           pushHandler.notificationMessage = mutableNotification;
+           pushHandler.params= params;
+           [pushHandler notificationReceived];
+       } else {
+           self.launchNotification = userInfo;
+           completionHandler(UIBackgroundFetchResultNewData);
+       }
+   }
 }
 
 // The accessors use an Associative Reference since you can't define a iVar in a category
