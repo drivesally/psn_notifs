@@ -347,12 +347,27 @@
 }
 
 - (void)notificationReceived {
-  NSLog(@"Notification received");
+    NSLog(@"Notification received");
   
-    if (self.notificationCallbackId != nil)
+    if (self.notificationCallbackId != nil && self.notificationMessage)
     {
-      CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"test"];
-      [self.commandDelegate sendPluginResult:commandResult callbackId:self.notificationCallbackId];
+        NSMutableString *jsonStr = [NSMutableString stringWithString:@"{"];
+
+        [self parseDictionary:notificationMessage intoJSON:jsonStr];
+
+        if (isInline)
+        {
+        [jsonStr appendFormat:@"foreground:\"%d\"", 1];
+        isInline = NO;
+        }
+        else {
+        [jsonStr appendFormat:@"foreground:\"%d\"", 0];
+        }
+
+        [jsonStr appendString:@"}"];
+
+        CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonStr];
+        [self.commandDelegate sendPluginResult:commandResult callbackId:self.notificationCallbackId];
         self.notificationMessage = nil;
     }
 //  if (notificationMessage && self.callback)
@@ -483,4 +498,5 @@
 }
 
 @end
+
 
