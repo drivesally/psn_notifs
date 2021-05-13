@@ -33,6 +33,7 @@
 @property BOOL                          isInline;
 
 - (void)register:(CDVInvokedUrlCommand*)command;
+- (void)receiveNotifications:(CDVInvokedUrlCommand*)command;
 - (void)registerUserNotificationSettings:(CDVInvokedUrlCommand*)command;
 
 - (void)areNotificationsEnabled:(CDVInvokedUrlCommand*)command;
@@ -47,3 +48,4 @@
 
 
 #endif /* SimplePSN_h */
+

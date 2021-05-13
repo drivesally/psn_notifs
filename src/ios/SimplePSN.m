@@ -264,6 +264,17 @@
     [self notificationReceived];  // go ahead and process it
 }
 
+- (void)receiveNotifications:(CDVInvokedUrlCommand*)command;
+{
+  self.notificationCallbackId = command.callbackId;
+  
+  NSMutableDictionary* options = [command.arguments objectAtIndex:0];
+  
+  if (notificationMessage)      // if there is a pending startup notification
+    [self notificationReceived];  // go ahead and process it
+}
+
+
 /*
  - (void)isEnabled:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
  UIRemoteNotificationType type = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
@@ -338,35 +349,45 @@
 - (void)notificationReceived {
   NSLog(@"Notification received");
   
-  if (notificationMessage && self.callback)
-  {
-    NSMutableString *jsonStr = [NSMutableString stringWithString:@"{"];
-    
-    [self parseDictionary:notificationMessage intoJSON:jsonStr];
-    
-    if (isInline)
+    if (self.notificationCallbackId != nil)
     {
-      [jsonStr appendFormat:@"foreground:\"%d\"", 1];
-      isInline = NO;
+      CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"test"];
+      [self.commandDelegate sendPluginResult:commandResult callbackId:self.notificationCallbackId];
+        self.notificationMessage = nil;
     }
-    else {
-      [jsonStr appendFormat:@"foreground:\"%d\"", 0];
-    }
-    
-    [jsonStr appendString:@"}"];
-        
-    NSString *jsCallBack = [NSString stringWithFormat:@"%@(%@);", self.callback, jsonStr];
-    if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
-      // Cordova-iOS pre-4
-      [self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsCallBack waitUntilDone:NO];
-    } else {
-      // Cordova-iOS 4+
-//      [self.webView performSelectorOnMainThread:@selector(evaluateJavaScript:completionHandler:) withObject:jsCallBack waitUntilDone:NO];
-        [self.commandDelegate evalJs:jsCallBack];
-    }
-
-    self.notificationMessage = nil;
-  }
+//  if (notificationMessage && self.callback)
+//  {
+//    NSMutableString *jsonStr = [NSMutableString stringWithString:@"{"];
+//
+//    [self parseDictionary:notificationMessage intoJSON:jsonStr];
+//
+//    if (isInline)
+//    {
+//      [jsonStr appendFormat:@"foreground:\"%d\"", 1];
+//      isInline = NO;
+//    }
+//    else {
+//      [jsonStr appendFormat:@"foreground:\"%d\"", 0];
+//    }
+//
+//    [jsonStr appendString:@"}"];
+//
+//    NSString *jsCallBack = [NSString stringWithFormat:@"%@(%@);", self.callback, jsonStr];
+//    if ([self.webView respondsToSelector:@selector(stringByEvaluatingJavaScriptFromString:)]) {
+//      // Cordova-iOS pre-4
+//      [self.webView performSelectorOnMainThread:@selector(stringByEvaluatingJavaScriptFromString:) withObject:jsCallBack waitUntilDone:NO];
+//    } else {
+//      // Cordova-iOS 4+
+////      [self.webView performSelectorOnMainThread:@selector(evaluateJavaScript:completionHandler:) withObject:jsCallBack waitUntilDone:NO];
+////        [self.commandDelegate evalJs:jsCallBack];
+//        [self.commandDelegate evalJs:@"console.log('lol cats')"];
+//        [self.commandDelegate evalJs:@"console.log(olegtest)"];
+//        [self.commandDelegate evalJs:@"olegtest()"];
+//
+//    }
+//
+//    self.notificationMessage = nil;
+//  }
 }
 
 // reentrant method to drill down and surface all sub-dictionaries' key/value pairs into the top level json
@@ -462,3 +483,4 @@
 }
 
 @end
+

@@ -53,6 +53,22 @@ SimplePSN.prototype.setApplicationIconBadgeNumber = function(successCallback, er
     cordova.exec(successCallback, errorCallback, "SimplePSN", "setApplicationIconBadgeNumber", [{badge: badge}]);
 };
 
+// Call this to receive push notifications. Content of [options] depends on whether we are working with APNS (iOS) or GCM (Android)
+SimplePSN.prototype.receiveNotifications = function(successCallback, errorCallback, options) {
+    if (errorCallback == null) { errorCallback = function() {}}
+
+    if (typeof errorCallback != "function")  {
+        console.log("SimplePSN.register failure: failure parameter not a function");
+        return
+    }
+
+    if (typeof successCallback != "function") {
+        console.log("SimplePSN.register failure: success callback parameter must be a function");
+        return
+    }
+
+    cordova.exec(successCallback, errorCallback, "SimplePSN", "receiveNotifications", [options]);
+};
 //-------------------------------------------------------------------
 
 if(!window.plugins) {
