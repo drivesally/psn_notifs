@@ -289,7 +289,14 @@
   NSString *token = [[[[deviceToken description] stringByReplacingOccurrencesOfString:@"<"withString:@""]
                       stringByReplacingOccurrencesOfString:@">" withString:@""]
                      stringByReplacingOccurrencesOfString: @" " withString: @""];
-  [results setValue:token forKey:@"deviceToken"];
+
+    const char *tokenBytes = (const char *)[deviceToken bytes];
+    NSMutableString *deviceTokenString = [NSMutableString string];
+    for (NSUInteger i = 0; i < [deviceToken length]; i++) {
+      [deviceTokenString appendFormat:@"%02.2hhx", tokenBytes[i]];
+    }
+    NSString* final = [[NSString alloc] initWithString:deviceTokenString];
+  [results setValue:final forKey:@"deviceToken"];
   
 #if !TARGET_IPHONE_SIMULATOR
   // Get Bundle Info for Remote Registration (handy if you have more than one app)
