@@ -296,6 +296,7 @@
       [deviceTokenString appendFormat:@"%02.2hhx", tokenBytes[i]];
     }
     NSString* final = [[NSString alloc] initWithString:deviceTokenString];
+    token = final;
   [results setValue:final forKey:@"deviceToken"];
   
 #if !TARGET_IPHONE_SIMULATOR
