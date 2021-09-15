@@ -359,22 +359,29 @@
   
     if (self.notificationCallbackId != nil && self.notificationMessage)
     {
-        NSMutableString *jsonStr = [NSMutableString stringWithString:@"{"];
-
-        [self parseDictionary:notificationMessage intoJSON:jsonStr];
-
+        NSMutableDictionary *notificationPayloadDict = [[NSMutableDictionary alloc] initWithDictionary:self.notificationMessage];
         if (isInline)
         {
-        [jsonStr appendFormat:@"foreground:\"%d\"", 1];
-        isInline = NO;
+            notificationPayloadDict[@"foreground"] = @1;
+            isInline = NO;
         }
         else {
-        [jsonStr appendFormat:@"foreground:\"%d\"", 0];
+            notificationPayloadDict[@"foreground"] = @0;
+        }
+        
+        NSMutableString *jsonString = [[NSMutableString alloc] init];
+
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:notificationPayloadDict
+                                                           options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
+                                                             error:&error];
+        if (! jsonData) {
+            NSLog(@"Got an error: %@", error);
+        } else {
+            jsonString = [[NSMutableString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
         }
 
-        [jsonStr appendString:@"}"];
-
-        CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonStr];
+        CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonString];
         [self.commandDelegate sendPluginResult:commandResult callbackId:self.notificationCallbackId];
         self.notificationMessage = nil;
     }
