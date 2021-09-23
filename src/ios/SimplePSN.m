@@ -362,11 +362,11 @@
         NSMutableDictionary *notificationPayloadDict = [[NSMutableDictionary alloc] initWithDictionary:self.notificationMessage];
         if (isInline)
         {
-            notificationPayloadDict[@"foreground"] = @1;
+            notificationPayloadDict[@"wasTapped"] = [NSNumber numberWithBool:FALSE];
             isInline = NO;
         }
         else {
-            notificationPayloadDict[@"foreground"] = @0;
+            notificationPayloadDict[@"wasTapped"] = [NSNumber numberWithBool:TRUE];
         }
         
         NSMutableString *jsonString = [[NSMutableString alloc] init];
