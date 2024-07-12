@@ -23,11 +23,32 @@ static char launchNotificationKey;
 
 + (void)load
 {
-  Method original, swizzled;
+    NSLog(@"AppDelegate.load");
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class class = [self class];
 
-  original = class_getInstanceMethod(self, @selector(init));
-  swizzled = class_getInstanceMethod(self, @selector(swizzled_init));
-  method_exchangeImplementations(original, swizzled);
+        SEL originalSelector = @selector(init);
+        SEL swizzledSelector = @selector(swizzled_init);
+
+        Method original = class_getInstanceMethod(class, originalSelector);
+        Method swizzled = class_getInstanceMethod(class, swizzledSelector);
+
+        BOOL didAddMethod =
+        class_addMethod(class,
+                        originalSelector,
+                        method_getImplementation(swizzled),
+                        method_getTypeEncoding(swizzled));
+
+        if (didAddMethod) {
+            class_replaceMethod(class,
+                                swizzledSelector,
+                                method_getImplementation(original),
+                                method_getTypeEncoding(original));
+        } else {
+            method_exchangeImplementations(original, swizzled);
+        }
+    });
 }
 
 - (AppDelegate *)swizzled_init
